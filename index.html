@@ -4,33 +4,49 @@
   <meta charset="UTF-8" />
   <title>Omniva paštomatų žemėlapis</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Omniva CSS -->
   <link rel="stylesheet" href="omniva-map.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+
+  <!-- Leaflet CSS iš CDN -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
-  <script src="omniva-map.min.js"></script>
+
   <style>
+    /* Užtikrinti, kad dropdown ir žemėlapis užims vietą */
     html, body {
       margin: 0;
       padding: 0;
+      height: 100%;
     }
     #omniva-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
       padding: 20px;
     }
   </style>
 </head>
 <body>
+  <!-- Vieta, kur bus dropdown + modalas -->
   <div id="omniva-container">
     <select id="omnivaMap"></select>
   </div>
 
+  <!-- jQuery iš CDN (reikalinga plugin’ui) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Leaflet JS iš CDN -->
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+  <!-- Omniva plugin’o kodo failas (turi būti GitHub repozitorijos šakniniame kataloge) -->
+  <script src="omniva-map.min.js"></script>
+
   <script>
+    // Įjungti plugin'ą ant <select> elemento
     $(document).ready(function () {
       $('#omnivaMap').omniva({
-        path_to_img: 'images/omniva/',
         country_code: 'LT',
+        path_to_img: 'images/omniva/',  // būtinai atitinka tavo images/omniva/ struktūrą
         showMap: true,
-        terminals: []
+        terminals: []  // tuščias masyvas, plugin’as pats užkraus terminalus iš Omnivos serverio
       });
     });
   </script>
