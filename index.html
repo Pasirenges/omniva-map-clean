@@ -5,7 +5,10 @@
   <title>Omniva žemėlapis</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Leaflet žemėlapio stiliai -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+  
+  <!-- Omniva CSS -->
   <link rel="stylesheet" href="omniva-map.css">
 
   <style>
@@ -22,16 +25,23 @@
 </head>
 <body>
 
+  <!-- Žemėlapio konteineris -->
   <div id="map"></div>
 
+  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+
+  <!-- Omniva žemėlapio logika -->
   <script src="omniva-map.min.js"></script>
 
+  <!-- Paleidimas -->
   <script>
     OmnivaMap.init({
       country: 'LT',
-      path_to_img: './images/omniva/', // ← ČIA SVARBIAUSIA
+      path_to_img: './images/omniva/', // ✅ labai svarbu: atitinka tavo GitHub struktūrą
       onSelect: function(terminal) {
         console.log("Pasirinktas terminalas:", terminal.name);
       }
