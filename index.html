@@ -1,41 +1,59 @@
 <!DOCTYPE html>
 <html lang="lt">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Omniva paštomatų žemėlapis</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Omniva CSS (turi būti tame pačiame kataloge) -->
   <link rel="stylesheet" href="omniva-map.css">
+
+  <!-- Leaflet CSS iš CDN (reikalinga žemėlapiui) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
-  <script src="omniva-map.min.js"></script>
+
   <style>
     html, body {
       margin: 0;
       padding: 0;
+      height: 100%;
     }
-    #container {
-      padding: 30px;
+    /* Konteineris, kur bus „dropdown“ + „Show on map“ mygtukas */
+    #omniva-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
     }
+    /* Jei norėtum, kad žemėlapis būtų fiksuoto aukščio ekrane: */
+    /* #omniva-container { height: 80vh; } */
   </style>
 </head>
 <body>
-  <div id="container">
+
+  <!-- ČIA PAGRINDINIS KODAS, KURIAME BUS „dropdown“ -->
+  <div id="omniva-container">
+    <!-- Būtinai turi būti būtent <select id="omnivaMap"></select> -->
     <select id="omnivaMap"></select>
   </div>
 
+  <!-- jQuery iš CDN (Omniva plugin’as remiasi jQuery) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Leaflet JS iš CDN (Omniva žemėlapis remiasi Leaflet) -->
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+  <!-- Omniva plugin’o kodo failas (turi būti tavo GitHub repozitorijos šaknyje) -->
+  <script src="omniva-map.min.js"></script>
+
   <script>
+    // Kai DOM pilnai užsikraus, inicijuojame Omniva plugin’ą ant <select id="omnivaMap">
     $(document).ready(function () {
       $('#omnivaMap').omniva({
-        path_to_img: 'images/omniva/',
         country_code: 'LT',
+        path_to_img: 'images/omniva/',  // labai svarbu: ikonėlės turi būti būtent čia
         showMap: true,
-        terminals: [
-          ["Vilnius Paštomatas", 54.687157, 25.279652, "VIL001", "Vilnius", "Gedimino pr. 1", "LT-01103"],
-          ["Kaunas Paštomatas", 54.898521, 23.903597, "KAU002", "Kaunas", "Laisvės al. 10", "LT-44313"]
-        ]
+        terminals: []  // paliekam tuščią – plugin’as pats užkraus terminalų duomenis
       });
     });
   </script>
+
 </body>
 </html>
