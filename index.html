@@ -2,14 +2,14 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8" />
-  <title>Omniva paštomatų žemėlapis</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Omniva žemėlapis</title>
 
-  <!-- Omniva CSS (turi būti tame pačiame kataloge) -->
-  <link rel="stylesheet" href="omniva-map.css">
-
-  <!-- Leaflet CSS iš CDN (reikalinga žemėlapiui) -->
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+
+  <!-- Omniva CSS -->
+  <link rel="stylesheet" href="omniva-map.css" />
 
   <style>
     html, body {
@@ -17,43 +17,45 @@
       padding: 0;
       height: 100%;
     }
-    /* Konteineris, kur bus „dropdown“ + „Show on map“ mygtukas */
-    #omniva-container {
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    /* Jei norėtum, kad žemėlapis būtų fiksuoto aukščio ekrane: */
-    /* #omniva-container { height: 80vh; } */
   </style>
 </head>
 <body>
 
-  <!-- ČIA PAGRINDINIS KODAS, KURIAME BUS „dropdown“ -->
-  <div id="omniva-container">
-    <!-- Būtinai turi būti būtent <select id="omnivaMap"></select> -->
-    <select id="omnivaMap"></select>
-  </div>
+  <!-- Kur žemėlapis bus rodomas -->
+  <div id="omniva-container"></div>
 
-  <!-- jQuery iš CDN (Omniva plugin’as remiasi jQuery) -->
+  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Leaflet JS iš CDN (Omniva žemėlapis remiasi Leaflet) -->
+
+  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
-  <!-- Omniva plugin’o kodo failas (turi būti tavo GitHub repozitorijos šaknyje) -->
+
+  <!-- Omniva JS -->
   <script src="omniva-map.min.js"></script>
 
   <script>
-    // Kai DOM pilnai užsikraus, inicijuojame Omniva plugin’ą ant <select id="omnivaMap">
-    $(document).ready(function () {
-      $('#omnivaMap').omniva({
-        country_code: 'LT',
-        path_to_img: 'images/omniva/',  // labai svarbu: ikonėlės turi būti būtent čia
-        showMap: true,
-        terminals: []  // paliekam tuščią – plugin’as pats užkraus terminalų duomenis
-      });
+    document.addEventListener("DOMContentLoaded", function () {
+      fetch("https://www.omniva.lt/locations.json")
+        .then(res => res.json())
+        .then(data => {
+          const terminals = data.LT.map(item => [
+            item.NAME,
+            parseFloat(item.Y),
+            parseFloat(item.X),
+            item.ZIP,
+            item.A2_NAME,
+            item.A1_NAME,
+            item.comment
+          ]);
+
+          $("#omniva-container").OmnivaMap({
+            terminals: terminals,
+            path_to_img: "images/omniva/",
+            country_code: "LT",
+            showMap: true
+          });
+        });
     });
   </script>
-
 </body>
 </html>
