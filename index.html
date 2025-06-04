@@ -2,27 +2,14 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Omniva žemėlapis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
-
-  <!-- Omniva CSS -->
+  <!-- CSS failas -->
   <link rel="stylesheet" href="omniva-map.css" />
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Kur žemėlapis bus rodomas -->
-  <div id="omniva-container"></div>
+  <!-- Leaflet stiliai -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -30,31 +17,44 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
 
-  <!-- Omniva JS -->
-  <script src="omniva-map.min.js"></script>
+  <!-- Omniva žemėlapio logika -->
+  <script src="omniva-map.min.js" defer></script>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Čia bus rodomas žemėlapis -->
+  <input type="hidden" id="omniva-container" />
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      fetch("https://www.omniva.lt/locations.json")
-        .then(res => res.json())
-        .then(data => {
-          const terminals = data.LT.map(item => [
-            item.NAME,
-            parseFloat(item.Y),
-            parseFloat(item.X),
-            item.ZIP,
-            item.A2_NAME,
-            item.A1_NAME,
-            item.comment
-          ]);
+      // Palauk kol JS failas bus užkrautas
+      const waitForOmniva = setInterval(() => {
+        if (typeof jQuery.fn.OmnivaMap !== "undefined") {
+          clearInterval(waitForOmniva);
 
-          $("#omniva-container").OmnivaMap({
-            terminals: terminals,
-            path_to_img: "images/omniva/",
-            country_code: "LT",
-            showMap: true
-          });
-        });
+          // Įkeliame terminalų duomenis iš Omniva API
+          fetch("https://www.omniva.lt/locations.json")
+            .then(response => response.json())
+            .then(data => {
+              $("#omniva-container").OmnivaMap({
+                terminals: data,
+                country_code: "LT",
+                path_to_img: "images/omniva/"
+              });
+            })
+            .catch(error => {
+              console.error("Klaida kraunant terminalus:", error);
+            });
+        }
+      }, 100);
     });
   </script>
 </body>
